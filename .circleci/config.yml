@@ -10,6 +10,8 @@ jobs:
       - run: cd final/client && npm ci
       - run: cd final/client && npm test
       - run: cd final/client && npx apollo client:check
+      # CircleCI needs global installs to be sudo
+      - run: sudo npm install --global apollo
 
       - run: |
           if [ "${CIRCLE_BRANCH}" == "master" ]; then
@@ -24,6 +26,8 @@ jobs:
       - checkout
       - run: cd final/server && npm ci
       - run: cd final/server && npm test
+      # CircleCI needs global installs to be sudo
+      - run: sudo npm install --global apollo
 
       - run:
           name: Starting server
