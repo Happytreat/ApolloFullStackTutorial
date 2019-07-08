@@ -43,6 +43,7 @@ export default function Launches() {
 	return (
 		<Query query={GET_LAUNCHES}>
 			{({ data, loading, error, fetchMore }) => {
+				// TODO: This seems like something that can be moved into a common function
 				if (loading) return <Loading />
 				if (error) return <p>ERROR</p>
 
@@ -55,8 +56,7 @@ export default function Launches() {
 						{// First check to see if we have more launches available in our query.
 						// If we do, we render a button with a click handler that calls the fetchMore function from Apollo
 
-						// define the updateQuery function to tell Apollo
-						// how to update the list of launches in the cache.
+						// tells Apollo how to update the list of launches in the cache.
 						data.launches && data.launches.hasMore && (
 							<Button
 								onClick={() =>
