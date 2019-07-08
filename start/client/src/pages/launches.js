@@ -4,25 +4,37 @@ import gql from 'graphql-tag'
 
 import { LaunchTile, Header, Button, Loading } from '../components'
 
+// Use a fragment to share fields between the two GraphQL
+// operations from launches.js and launch.js
+// name of fragment LaunchTile can be any
+// but the type must correspond to a type in schema
+export const LAUNCH_TILE_DATA = gql`
+	fragment LaunchTile on Launch {
+		id
+		isBooked
+		rocket {
+			id
+			name
+		}
+		mission {
+			name
+			missionPatch
+		}
+	}
+`
+
+// import LAUNCH_TILE_DATA into gql document
 const GET_LAUNCHES = gql`
 	query launchList($after: String) {
 		launches(after: $after) {
 			cursor
 			hasMore
 			launches {
-				id
-				isBooked
-				rocket {
-					id
-					name
-				}
-				mission {
-					name
-					missionPatch
-				}
+				...LaunchTile
 			}
 		}
 	}
+	${LAUNCH_TILE_DATA}
 `
 
 // define a render prop function as the child of Query and
