@@ -1,11 +1,15 @@
-import { ApolloProvider } from 'react-apollo'
+import { Query, ApolloProvider } from 'react-apollo'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Pages from './pages'
 import { ApolloClient } from 'apollo-client'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { HttpLink } from 'apollo-link-http'
-// import gql from 'graphql-tag'
+import gql from 'graphql-tag'
+
+import Pages from './pages'
+import Login from './pages/login'
+import injectStyles from './styles'
+import { resolvers, typeDefs } from './resolvers'
 
 const cache = new InMemoryCache()
 const link = new HttpLink({
@@ -20,9 +24,12 @@ const client = new ApolloClient({
 		headers: {
 			authorization: localStorage.getItem('token'),
 		},
+		typeDefs,
+		resolvers,
 	}),
 })
 
+// Add default state to the Apollo cache
 cache.writeData({
 	data: {
 		isLoggedIn: !!localStorage.getItem('token'),
@@ -30,12 +37,21 @@ cache.writeData({
 	},
 })
 
+// access local data with @client directive
+const IS_LOGGED_IN = gql`
+	query IsUserLoggedIn {
+		isLoggedIn @client
+	}
+`
+
+injectStyles()
+
 /**
  * The ApolloProvider component wraps your React app and places the client on the context, which allows you to access it from anywhere in your component tree.
  */
 ReactDOM.render(
 	<ApolloProvider client={client}>
-		<Pages />
+		<Query query={IS_LOGGED_IN}>{({ data }) => (data.isLoggedIn ? <Pages /> : <Login />)}</Query>
 	</ApolloProvider>,
 	document.getElementById('root')
 )
