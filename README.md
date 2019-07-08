@@ -23,3 +23,7 @@ and
 ```bash
 cd final/client && npm i && npm start
 ```
+
+
+## Circle CI 
+Each time PR is made, CI tests are run and apollo schema is updated in apollo engine.
