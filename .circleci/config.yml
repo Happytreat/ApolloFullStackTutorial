@@ -10,7 +10,7 @@ jobs:
       - run: cd final/client && npm ci
       - run: cd final/client && npm test
       # run: cd final/client && npx apollo client:check
-      - run: cd final/client && npx apollo client:check
+      - run: cd final/client
       # CircleCI needs global installs to be sudo
       - run: sudo npm install --global apollo
 
